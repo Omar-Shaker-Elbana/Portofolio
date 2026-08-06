@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#05050d" />
+<meta name="description" content="Omar Shaker's blog — notes on backend engineering, Django, and building StoreHub in public." />
+<title>Blog · Omar Shaker</title>
+<link rel="icon" href="images/icon.png" type="image/png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg-0: #05050d; --bg-1: #090915; --bg-2: #0e0e1c;
+    --bg-card: #111120; --bg-hover: #161628;
+    --border: rgba(100,255,210,0.08); --border-mid: rgba(100,255,210,0.15);
+    --mint: #64ffda; --mint-dim: rgba(100,255,210,0.12); --mint-glow: rgba(100,255,210,0.25);
+    --gold: #ffd166; --gold-dim: rgba(255,209,102,0.12); --coral: #ff6b6b;
+    --text-0: #f0f0fa; --text-1: #c8c8e0; --text-2: #7878a0; --text-3: #454568;
+    --font-display: 'Syne', sans-serif; --font-mono: 'JetBrains Mono', monospace; --font-body: 'DM Sans', sans-serif;
+    --radius: 8px; --radius-lg: 16px;
+    --trans: 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  [data-theme="light"] {
+    --bg-0: #f4f5fb; --bg-1: #eceef8; --bg-2: #e2e5f5; --bg-card: #ffffff; --bg-hover: #f0f2fc;
+    --border: rgba(40,50,120,0.1); --border-mid: rgba(40,50,120,0.22);
+    --mint: #00b894; --mint-dim: rgba(0,184,148,0.1); --mint-glow: rgba(0,184,148,0.2);
+    --gold: #e09a00; --gold-dim: rgba(224,154,0,0.1); --coral: #e05252;
+    --text-0: #09091e; --text-1: #1c1c40; --text-2: #4a4a78; --text-3: #9090b8;
+  }
+  * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body { background: var(--bg-0); color: var(--text-1); font-family: var(--font-body); line-height: 1.7; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--mint-dim); color: var(--mint); }
+  .container { width: min(880px, 100% - 3rem); margin-inline: auto; }
+
+  /* ─── TOP BAR ─── */
+  .blog-header {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg-0) 88%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .blog-header .container { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 0; }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-2);
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 0.55rem 1rem;
+    transition: color var(--trans), border-color var(--trans), background var(--trans);
+  }
+  .back-link:hover { color: var(--mint); border-color: var(--mint); background: var(--mint-dim); }
+  .back-link svg { width: 14px; height: 14px; }
+  .theme-toggle {
+    background: none; border: 1px solid var(--border); border-radius: 50%;
+    width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+    color: var(--text-2); cursor: pointer; transition: color var(--trans), border-color var(--trans);
+  }
+  .theme-toggle:hover { color: var(--mint); border-color: var(--mint); }
+  .theme-toggle svg { width: 17px; height: 17px; }
+  .theme-toggle .icon-moon { display: block; }
+  .theme-toggle .icon-sun { display: none; }
+  [data-theme="light"] .theme-toggle .icon-moon { display: none; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: block; }
+
+  /* ─── HERO ─── */
+  .blog-hero { padding: 5rem 0 3rem; }
+  .blog-label { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mint); margin-bottom: 1rem; }
+  .blog-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.2rem, 5vw, 3.2rem); letter-spacing: -0.03em; color: var(--text-0); margin-bottom: 1rem; }
+  .blog-sub { font-size: 1.05rem; color: var(--text-2); max-width: 520px; }
+
+  /* ─── FILTER PILLS ─── */
+  .blog-filters { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 2rem 0 3rem; }
+  .blog-filter {
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.03em;
+    padding: 0.45rem 0.95rem; border-radius: 100px; border: 1px solid var(--border-mid);
+    color: var(--text-2); cursor: pointer; background: transparent; transition: all var(--trans);
+  }
+  .blog-filter.active, .blog-filter:hover { color: var(--mint); border-color: var(--mint); background: var(--mint-dim); }
+
+  /* ─── POST LIST ─── */
+  .post-list { display: flex; flex-direction: column; gap: 1.25rem; padding-bottom: 6rem; }
+  .post-card {
+    display: block; background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1.75rem 2rem;
+    transition: border-color var(--trans), transform var(--trans), background var(--trans);
+  }
+  .post-card:hover { border-color: var(--border-mid); transform: translateY(-2px); background: var(--bg-hover); }
+  .post-meta { display: flex; align-items: center; gap: 0.75rem; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.65rem; }
+  .post-tag { color: var(--mint); }
+  .post-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--text-0); letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+  .post-excerpt { font-size: 0.92rem; color: var(--text-2); line-height: 1.7; }
+  .post-arrow { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-2); }
+  .post-card:hover .post-arrow { color: var(--mint); }
+
+  .post-card { position: relative; overflow: hidden; }
+  .post-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--mint), rgba(100,255,210,0.3), transparent);
+    opacity: 0; transition: opacity var(--trans);
+  }
+  .post-card:hover::before { opacity: 1; }
+
+  .post-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.25rem; }
+  .post-link-btn {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-2);
+    border: 1px solid var(--border-mid); border-radius: var(--radius);
+    padding: 0.5rem 0.9rem; transition: color var(--trans), border-color var(--trans), background var(--trans), transform var(--trans);
+  }
+  .post-link-btn:hover { color: var(--mint); border-color: var(--mint); background: var(--mint-dim); transform: translateY(-2px); }
+  .post-link-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  .post-inline-link {
+    color: var(--mint); text-decoration: underline;
+    text-decoration-color: var(--mint-glow); text-underline-offset: 3px;
+    transition: color var(--trans), text-decoration-color var(--trans);
+  }
+  .post-inline-link:hover { color: var(--text-0); text-decoration-color: var(--mint); }
+
+  /* ─── REVEAL ANIMATION SYSTEM ─── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.08s; }
+  .reveal-delay-2 { transition-delay: 0.16s; }
+  .reveal-delay-3 { transition-delay: 0.24s; }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .blog-header { animation: fadeInDown 0.6s cubic-bezier(0.16,1,0.3,1) both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .blog-header { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+  }
+
+  @media (max-width: 640px) {
+    .post-card { padding: 1.4rem 1.5rem; }
+    .post-links { flex-direction: column; align-items: stretch; }
+    .post-link-btn { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="blog-header">
+    <div class="container">
+      <a href="index.html#hero" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to Portfolio
+      </a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="blog-hero">
+      <div class="blog-label reveal">Blog</div>
+      <h1 class="blog-title reveal reveal-delay-1">Notes from the build.</h1>
+      <p class="blog-sub reveal reveal-delay-2">Longer-form write-ups on backend engineering, Django, and whatever breaks (and gets fixed) along the way. Companion reading to the LinkedIn series.</p>
+    </section>
+
+    <div class="blog-filters reveal reveal-delay-3" id="blog-filters">
+      <button class="blog-filter active" data-filter="all">All</button>
+      <button class="blog-filter" data-filter="codebase">Reclaiming the Codebase</button>
+      <button class="blog-filter" data-filter="general">General</button>
+    </div>
+
+    <div class="post-list" id="post-list">
+      <div class="post-card reveal" data-tag="codebase">
+        <div class="post-meta"><span>August 6, 2026</span><span>·</span><span class="post-tag">Reclaiming the Codebase</span></div>
+        <div class="post-title">Reclaiming the Codebase — Part 0: How I Lost Control of My Own Backend</div>
+        <p class="post-excerpt">A few months ago, I left my biggest personal project. When I came back, I realized I no longer understood my own backend.
+<br><br>
+Originally, around 90% of the backend code was written by me (very little AI usage). After leaving the project untouched for five months, I came back and realized I had no idea where to continue. Even my Git history couldn't help.
+TBH the problem wasn't AI. It started much earlier: I had no roadmap, no milestones, and development became completely random.
+<br><br>
+So what did I do? I started using AI to resume the development of the project. At first, it looked handy, making views and DB models with only a simple prompt, I told myself: MAN! I was in denial for not using Claude and for writing most of the code myself at first! 
+<br><br>
+Then a problem became vivid: too many views and DB models were scripted with little review from my side, a mistake I admit and regret too much. I told myself it is time to stop being lazy and review the code at that stage. But every view depended on several functions, models, and utilities. Reviewing a single endpoint meant tracing code across the project. 
+Django, the framework I'd been using for years, suddenly felt intimidating.
+<br><br>
+If AI made that mess then AI can understand that mess, right? That was what I told myself. And I was wrong. AI started misunderstanding the code and even edited the code blocks it generated at first. I would be talking to Claude on 2 different chats and the answers would be different. Honestly, I would not blame any AI tool for that, a clear roadmap or set of actions was not there, AI was just improvising.
+<br><br>
+Then I lost hope in the whole thing, the project I thought would be the biggest in my portfolio was over, it felt like all the effort was wasted! I tried to fix as much as I could, but procrastination kicked in. For sometime, I did not open VS Code just because the code looked INTIMIDATING.
+AI did not ruin the project, it just accelerated the consequences of my plan.
+<br><br>
+And here comes the role of this series, by sharing updates as I go, I will force myself to improve the code and eventually reclaim the codebase. These posts will be a commitment device, as James Clear said in his book "Atomic Habits" (amazing book btw, recommend you read it).
+<br><br>
+So as for today (August 6, 2026), the project stands on
+commit <a href="https://github.com/Omar-Shaker-Elbana/Store_Hub/commit/87bac7e5a90045af0c0aa3b9a6dd0c67f5cf7664" target="_blank" rel="noopener" class="post-inline-link">#102</a>.
+<a href="https://github.com/Omar-Shaker-Elbana/Store_Hub" target="_blank" rel="noopener" class="post-inline-link">Full repo</a>
+<br><br>
+Every couple of days, I'll refactor one piece of the backend, explain what was wrong, what I learned, and how I fixed it.
+Let's see if I can reclaim this codebase!</p>
+        <div class="post-links">
+          <a href="https://www.linkedin.com/feed/update/urn:li:activity:7491101290723258368/" target="_blank" rel="noopener" class="post-link-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            Read on LinkedIn
+          </a>
+          <a href="https://medium.com/@omarmohamedshaker/reclaiming-the-codebase-part-0-how-i-lost-control-of-my-own-backend-8e154b401984" target="_blank" rel="noopener" class="post-link-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
+            Read on Medium
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    if ((localStorage.getItem('theme') || 'dark') === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObs.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    const filters = document.querySelectorAll('.blog-filter');
+    const posts = document.querySelectorAll('.post-card');
+    filters.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filters.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        posts.forEach(p => {
+          p.style.display = (f === 'all' || p.dataset.tag === f) ? 'block' : 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
