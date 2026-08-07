@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg-0: #05050d; --bg-1: #090915; --bg-2: #0e0e1c;
+    --bg-0: #0a0a1a; --bg-1: #0d0d1e; --bg-2: #121224;
     --bg-card: #111120; --bg-hover: #161628;
     --border: rgba(100,255,210,0.08); --border-mid: rgba(100,255,210,0.15);
     --mint: #64ffda; --mint-dim: rgba(100,255,210,0.12); --mint-glow: rgba(100,255,210,0.25);
@@ -24,7 +24,7 @@
     --trans: 0.3s cubic-bezier(0.4,0,0.2,1);
   }
   [data-theme="light"] {
-    --bg-0: #f4f5fb; --bg-1: #eceef8; --bg-2: #e2e5f5; --bg-card: #ffffff; --bg-hover: #f0f2fc;
+    --bg-0: lch(97.29% 11.79 201.22); --bg-1: #e0edea; --bg-2: #d6e6e1; --bg-card: #f4faf8; --bg-hover: #ecf5f2;
     --border: rgba(40,50,120,0.1); --border-mid: rgba(40,50,120,0.22);
     --mint: #00b894; --mint-dim: rgba(0,184,148,0.1); --mint-glow: rgba(0,184,148,0.2);
     --gold: #e09a00; --gold-dim: rgba(224,154,0,0.1); --coral: #e05252;
@@ -32,7 +32,15 @@
   }
   * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; font-size: 16px; }
-  body { background: var(--bg-0); color: var(--text-1); font-family: var(--font-body); line-height: 1.7; overflow-x: hidden; }
+  body {
+    background:
+      radial-gradient(ellipse 900px 500px at 12% -8%, rgba(0, 255, 183, 0.07), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 92% 10%, rgba(255,209,102,0.05), transparent 55%),
+      radial-gradient(ellipse 800px 600px at 50% 100%, rgba(100,255,210,0.035), transparent 60%),
+      var(--bg-0);
+    background-attachment: fixed;
+    color: var(--text-1); font-family: var(--font-body); line-height: 1.7; overflow-x: hidden;
+  }
   a { color: inherit; text-decoration: none; }
   ::selection { background: var(--mint-dim); color: var(--mint); }
   .container { width: min(880px, 100% - 3rem); margin-inline: auto; }

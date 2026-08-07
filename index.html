@@ -3352,7 +3352,7 @@ function initHorizProjects() {
   function setOuterHeight() {
     if (!isDesktop) { outer.style.height = ''; return; }
     const extra = Math.max(track.scrollWidth - window.innerWidth, 0);
-    const scrollFactor = 1.6; // tune scroll "speed": lower = faster, higher = slower
+    const scrollFactor = 5; // tune scroll "speed": lower = faster, higher = slower
     outer.style.height = (window.innerHeight + extra * scrollFactor) + 'px';
     measureSlides();
   }
@@ -3367,7 +3367,10 @@ function initHorizProjects() {
 
   function render() {
     if (!isDesktop) { track.style.transform = ''; raf = null; return; }
-    cur += (target - cur) * 0.1;
+    const maxStep = 0.006; // caps how far cur can move per frame — prevents fast flicks from "warping" through slides
+    let delta = (target - cur) * 0.06;
+    delta = Math.max(-maxStep, Math.min(maxStep, delta));
+    cur += delta;
     if (Math.abs(target - cur) < 0.0008) cur = target;
     const maxTx = Math.max(track.scrollWidth - window.innerWidth, 0);
     const tx = -maxTx * cur;
@@ -3571,6 +3574,7 @@ window.addEventListener('scroll', () => {
   
 document.getElementById('footer-year').textContent = new Date().getFullYear();
 
+ 
     </script>
     
 </body>
